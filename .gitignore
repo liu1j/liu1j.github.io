@@ -1,3 +1,9 @@
 preview-*.png
 preview-check.cjs
 assets/golden-gate.jpg
+logo-research.cjs
+logo-sources.cjs
+download-logos.cjs
+logo-originals/
+prepare-transparent-logos.py
+prepare-travel.cjs
