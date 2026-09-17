@@ -54,6 +54,32 @@
  function queueUpdate(){if(!queued){queued=true;requestAnimationFrame(updateNavigation)}}
  addEventListener('scroll',queueUpdate,{passive:true});addEventListener('resize',queueUpdate);updateNavigation();
  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ // Measure the actual two-row mobile header instead of leaving a fixed spacer.
+ const hero=document.querySelector('.hero'),cover=hero.querySelector('.cover'),shade=hero.querySelector('.shade');
+ const media=document.createElement('div');media.className='hero-media';
+ cover.before(media);media.append(cover,shade);
+ const mobile=matchMedia('(max-width:600px)');
+ function syncHeader(){document.documentElement.style.setProperty('--header-height',header.getBoundingClientRect().height+'px');queueUpdate()}
+ new ResizeObserver(syncHeader).observe(header);syncHeader();
+ let startX=0,startY=0,tracking=false,pulling=false;
+ function releaseHero(){tracking=false;pulling=false;media.classList.remove('is-pulling');media.style.setProperty('--pull','0px')}
+ media.addEventListener('touchstart',e=>{
+  if(!mobile.matches||reduce.matches||scrollY>0||e.touches.length!==1)return;
+  startX=e.touches[0].clientX;startY=e.touches[0].clientY;tracking=true;
+ },{passive:true});
+ media.addEventListener('touchmove',e=>{
+  if(!tracking)return;
+  if(e.touches.length!==1){releaseHero();return}
+  const dy=e.touches[0].clientY-startY,dx=e.touches[0].clientX-startX;
+  if(!pulling && (dy<0||Math.abs(dx)>Math.abs(dy))){tracking=false;return}
+  if(dy<=0){releaseHero();return}
+  if(!e.cancelable){releaseHero();return}
+  e.preventDefault();pulling=true;media.classList.add('is-pulling');
+  media.style.setProperty('--pull',Math.min(105,Math.sqrt(dy)*6)+'px');
+ },{passive:false});
+ media.addEventListener('touchend',releaseHero,{passive:true});
+ media.addEventListener('touchcancel',releaseHero,{passive:true});
+ mobile.addEventListener('change',releaseHero);reduce.addEventListener('change',releaseHero);
  let observer;
  function setupMotion(){
   observer?.disconnect();

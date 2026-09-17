@@ -1,5 +1,10 @@
 (() => {
 const data=window.SITE_CONTENT;
+// Display the supplied artwork unchanged; CSS trims its surrounding empty space.
+document.querySelectorAll('.logo').forEach(logo=>{
+ const image=document.createElement('img');image.src='assets/brand-logo.png';image.alt='l1j.cn';
+ logo.replaceChildren(image);logo.classList.add('image-logo');
+});
 let lang='zh';try{lang=localStorage.getItem('yijun-language')==='en'?'en':'zh'}catch(_){}
 const text=v=>typeof v==='string'?v:v?.[lang]||'';
 function element(tag,cls,value){const n=document.createElement(tag);if(cls)n.className=cls;if(value)n.textContent=value;return n}
