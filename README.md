@@ -38,6 +38,16 @@
 
 ## 发布与隐私
 
+### 联系表单
+
+`contact-config.js` 的 `endpoint` 为空时，访客可以填写内容，但发送按钮禁用，页面明确提示尚未开放提交。当前没有接收后端，填写内容不会被保存，也不会发送邮件。
+
+当前已配置 Formspree 地址，`submissionsEnabled: true`，使用 `submissionMode: 'hosted-captcha'`。访客提交后通过原生 POST 前往 Formspree 托管的 reCAPTCHA 验证流程，提交字段包括 `name`、`email`、`message` 和隐藏蜜罐 `_gotcha`。验证码校验和最终结果由 Formspree 处理，本站不会提前显示发送成功。必须在 Formspree 的 Settings → Spam protection 中保持 CAPTCHA 开启并选择默认 reCAPTCHA；网页配置本身不能开启服务端防护。尚需实际验证后台设置与收件。
+
+不要填写邮箱密码或秘密 API key。信息不写入浏览器持久存储。将 `submissionsEnabled` 设为 `false` 可关闭网页提交入口，但不能禁用公开的 Formspree 接口。上线后请用本人信息完成一次人工验证码和收件验证。
+
+`interactions.js` 管理导航高亮、渐入动效和表单状态。系统“减少动态效果”开启时，关闭动画和顺滑滚动。
+
 检查本地效果及 `git diff` 后，提交并推送到 GitHub Pages 配置的分支。页面没有第三方字体或分析脚本，语言偏好只保存在访问者浏览器本地。
 
 简历仅用作资料来源，没有复制进仓库。不要把简历原件、证件照、邮箱、电话等私人信息加入仓库。页面仅选用教育与实习经历，不展示项目经历或技能。新照片发布前应移除 EXIF 定位等元数据。
